@@ -1,0 +1,23 @@
+setup.template.enabled: false
+
+filebeat.inputs:
+- type: log
+  paths:
+    - /var/log/packets.log
+# filebeat.prospectors:
+#   - paths:
+#     - /var/log/packets.log
+#     document_type: syslog
+#     json.keys_under_root: true
+#     json.add_error_key: true
+# output.console:
+#   pretty: true
+processors:
+- decode_json_fields:
+    fields: ['message']
+    target: json
+output.elasticsearch:
+  hosts: '${ELASTICSEARCH_HOSTS:172.17.0.2:9200}'
+  index: "packet-%{+yyyy.MM.dd}"
+# #   username: '${ELASTICSEARCH_USERNAME:}'
+# #   password: '${ELASTICSEARCH_PASSWORD:}'
